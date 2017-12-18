@@ -95,17 +95,27 @@
 		},
 		methods: {
 			submitForm: function (formName) {
+
+				var _this = this;
 				this.$refs[formName].validate(function (valid) {
 
 					if (valid) {
-                        axios.post('http://test.jutongkeji.com:8075/TaxiManager/api/passenger/queryAdvanceOrder', {passengerId:'12345'})
-							.then(function (res) {
-								console.log(res);
-							}).catch(function (err) {
-                                console.log(err);
-                            });
-					} else {
-
+						axios.get('/toLogin?usernmae=tck', {username: 'tck', password: 123456},{headers: {
+//							'Content-Type': 'application/x-www-form-urlencoded'
+						}}).then(function (res) {
+							var data = res.data;
+							if(data.code===1){
+								_this.$message({
+									message: data.result,
+									type: 'success'
+								});
+                            } else {
+								_this.$message.error(data.result);
+                            }
+							console.log(res);
+						}).catch(function (err) {
+							_this.$message.error("登录失败");
+						});
 					}
 
 					console.log(valid);

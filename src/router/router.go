@@ -33,5 +33,8 @@ func init() {
 		t.Execute(writer, nil)
 	})
 
+	//登录
+	http.HandleFunc("/toLogin", ToLogin)
+
 	fmt.Println("------路由初始化完成")
 }
