@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="/static/css/element-ui.css">
     <!-- 引入Vue -->
     <script type="text/javascript" src="/static/js/vue.js"></script>
+    <script type="text/javascript" src="/static/js/qs.js"></script>
     <script type="text/javascript" src="/static/js/axios.js"></script>
     <script type="text/javascript" src="/static/js/element-ui.js"></script>
 
@@ -75,57 +76,61 @@
 
 <script type="text/javascript">
 
-	var vm = new Vue({
-		el: '#app',
-		data: {
-			ruleForm: {
-				username: '',
-				password: ''
-			},
-			rules: {
-				username: [
-					{required: true, message: '请输入用户名', trigger: 'blur'},
-					{min: 6, max: 8, message: '长度在 6 到 8 个字符', trigger: 'blur,change'}
-				],
-				password: [
-					{required: true, message: '请输入密码', trigger: 'blur,change'},
-					{min: 6, max: 12, message: '长度在 6 到 12 个字符', trigger: 'blur,change'}
-				]
-			}
-		},
-		methods: {
-			submitForm: function (formName) {
+    Vue.prototype.$qs = Qs;
+    Vue.prototype.$axios = axios;
 
-				var _this = this;
-				this.$refs[formName].validate(function (valid) {
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            ruleForm: {
+                username: '',
+                password: ''
+            },
+            rules: {
+                username: [
+                    {required: true, message: '请输入用户名', trigger: 'blur'},
+                    {min: 6, max: 8, message: '长度在 6 到 8 个字符', trigger: 'blur,change'}
+                ],
+                password: [
+                    {required: true, message: '请输入密码', trigger: 'blur,change'},
+                    {min: 6, max: 12, message: '长度在 6 到 12 个字符', trigger: 'blur,change'}
+                ]
+            }
+        },
+        methods: {
+            submitForm: function (formName) {
 
-					if (valid) {
-						axios.get('/toLogin?usernmae=tck', {username: 'tck', password: 123456},{headers: {
-//							'Content-Type': 'application/x-www-form-urlencoded'
-						}}).then(function (res) {
-							var data = res.data;
-							if(data.code===1){
-								_this.$message({
-									message: data.result,
-									type: 'success'
-								});
+                var _this = this;
+                this.$refs[formName].validate(function (valid) {
+
+                    if (valid) {
+                        _this.$axios.post("/toLogin", _this.$qs.stringify({
+                            "username": _this.ruleForm.username,
+                            "password": _this.ruleForm.password
+                        })).then(function (res) {
+                            var data = res.data;
+                            if (data.code === 1) {
+                                _this.$message({
+                                    message: data.result,
+                                    type: 'success'
+                                });
                             } else {
-								_this.$message.error(data.result);
+                                _this.$message.error(data.result);
                             }
-							console.log(res);
-						}).catch(function (err) {
-							_this.$message.error("登录失败");
-						});
-					}
+                            console.log(res);
+                        }).catch(function (err) {
+                            _this.$message.error("登录失败");
+                        });
+                    }
 
-					console.log(valid);
-				});
-			},
-			resetForm: function (formName) {
-				this.$refs[formName].resetFields();
-			}
-		}
-	});
+                    console.log(valid);
+                });
+            },
+            resetForm: function (formName) {
+                this.$refs[formName].resetFields();
+            }
+        }
+    });
 
 </script>
 </body>
