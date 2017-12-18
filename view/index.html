@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>管理后台</title>
+
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="/static/css/element-ui.css">
+    <!-- 引入Vue -->
+    <script type="text/javascript" src="/static/js/vue.js"></script>
+    <script type="text/javascript" src="/static/js/axios.js"></script>
+    <script type="text/javascript" src="/static/js/element-ui.js"></script>
+
+    <style type="text/css">
+
+        html, body, #app {
+            margin: 0;
+            height: 100%;
+            /*min-height: 400px;*/
+            /*min-width: 800px;*/
+        }
+
+        .el-header, .el-footer {
+            background-color: #B3C0D1;
+            color: #333;
+            text-align: center;
+        }
+
+        .el-menu {
+            border-right: solid 1px #575d6b;
+        }
+
+        .el-submenu .el-menu-item {
+            min-width: auto;
+        }
+
+        .footer {
+            line-height: 60px;
+        }
+
+        .container, .pane-content {
+            height: 100%;
+            width: 100%;
+        }
+
+        .tabs {
+            border: 0;
+            height: 100%;
+        }
+
+        .el-tabs--border-card {
+            box-shadow: 0 0 0 0;
+            -webkit-box-shadow: 0 0 0 0;
+        }
+
+        .el-tabs--border-card > .el-tabs__content {
+            padding: 2px;
+            /*height: 100%;*/
+        }
+
+    </style>
+</head>
+<body>
+<div id="app">
+    <el-container style="height: 100%;">
+        <el-header>Header</el-header>
+        <el-container>
+            <el-aside width="200px">
+
+                <el-menu
+                        :default-active="defaultActive"
+                        :unique-opened="uniqueOpened"
+                        class="el-menu-vertical-demo"
+                        @select="handleSelect"
+                        background-color="#545c64"
+                        text-color="#fff"
+                        active-text-color="#ffd04b"
+                        style="height: 100%;">
+                    <el-submenu v-for="menu in menus" v-bind:index="menu.id">
+                        <template slot="title">
+                            <i v-bind:class="menu.icon"></i>
+                            <span slot="title" v-text="menu.name"></span>
+                        </template>
+                        <el-menu-item v-for="item in menu.children" v-bind:index="item.id" v-text="item.name"></el-menu-item>
+                    </el-submenu>
+                </el-menu>
+
+            </el-aside>
+            <el-container>
+                <el-main style="padding: 0;">
+                    <div class="container" ref="container">
+                        <el-tabs class="tabs" v-model="editableTabsValue2" type="border-card" closable
+                                 @tab-remove="removeTab">
+                            <el-tab-pane
+                                    v-for="(item, index) in editableTabs2"
+                                    :key="item.name"
+                                    :label="item.title"
+                                    :name="item.name"
+                                    class="pane-content"
+                                    v-bind:style="{height:tabsContentHeight+'px'}">
+                                <iframe v-bind:src="item.content" frameborder="0" style="height: 100%;width: 100%;"></iframe>
+                            </el-tab-pane>
+                        </el-tabs>
+                    </div>
+                </el-main>
+                <el-footer class="footer">
+                    博客
+                </el-footer>
+            </el-container>
+        </el-container>
+    </el-container>
+</div>
+
+<script type="text/javascript">
+
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            css: {},
+            tabsContentHeight: 0,
+            editableTabsValue2: '2',
+            editableTabs2: [],
+            tabIndex: 2,
+            menus: [
+                {
+                    id: '1',
+                    name: '导航一',
+                    icon: 'el-icon-location',
+                    children: [
+                        {id: '1_1', name: '选项1_1', icon: 'el-icon-location'},
+                        {id: '1_2', name: '选项1_2', icon: 'el-icon-location'},
+                        {id: '1_3', name: '选项1_3', icon: 'el-icon-location'},
+                        {id: '1_4', name: '选项1_4', icon: 'el-icon-location'},
+                        {id: '1_5', name: '选项1_5', icon: 'el-icon-location'},
+                        {id: '1_6', name: '选项1_6', icon: 'el-icon-location'}
+                    ]
+                },
+                {
+                    id: '2',
+                    name: '导航二',
+                    icon: 'el-icon-menu',
+                    children: [
+                        {id: '2_1', name: '选项2_1', icon: 'el-icon-location'},
+                        {id: '2_2', name: '选项2_2', icon: 'el-icon-location'},
+                        {id: '2_3', name: '选项2_3', icon: 'el-icon-location'},
+                        {id: '2_4', name: '选项2_4', icon: 'el-icon-location'},
+                        {id: '2_5', name: '选项2_5', icon: 'el-icon-location'},
+                        {id: '2_6', name: '选项2_6', icon: 'el-icon-location'}
+                    ]
+                },
+                {
+                    id: '3',
+                    name: '导航三',
+                    icon: 'el-icon-setting',
+                    children: [
+                        {id: '3_1', name: '选项3_1', icon: 'el-icon-location'},
+                        {id: '3_2', name: '选项3_2', icon: 'el-icon-location'},
+                        {id: '3_3', name: '选项3_3', icon: 'el-icon-location'},
+                        {id: '3_4', name: '选项3_4', icon: 'el-icon-location'},
+                        {id: '3_5', name: '选项3_5', icon: 'el-icon-location'},
+                        {id: '3_6', name: '选项3_6', icon: 'el-icon-location'}
+                    ]
+                }
+            ],
+            uniqueOpened: true,
+            defaultActive: '1_1'
+        },
+        mounted: function () {
+            this.$nextTick(function () {
+
+                if (this.defaultActive) {
+                    this.addTab(this.defaultActive);
+                }
+                var _this = this;
+                window.onresize = function () {
+                    _this.initTabsContentHeight();
+                }
+            });
+        },
+        methods: {
+            initTabsContentHeight: function () {
+                var tabs = document.querySelectorAll("div[class='tabs el-tabs el-tabs--top el-tabs--border-card']");
+                var tabs_header = document.querySelectorAll("div[class='el-tabs__header']");
+                var tabs_content = document.querySelectorAll("div[class='el-tabs__content']");
+                console.log(tabs[0].offsetHeight);
+                console.log(tabs_header[0].offsetHeight);
+                console.log(tabs_content[0].offsetHeight);
+                if (tabs && tabs_header && tabs_content && tabs.length > 0 && tabs_header.length > 0 && tabs_content.length > 0) {
+                    this.tabsContentHeight = tabs[0].offsetHeight - (39 + 4);
+                }
+            },
+            handleSelect: function (key, keyPath) {
+                // this.$refs.container.innerText = key;
+                console.log(key, keyPath);
+                this.addTab(keyPath[1]);
+            },
+            addTab: function (targetName) {
+                var tabs = this.editableTabs2;
+                for (var i = 0; i < tabs.length; i++) {
+                    if (tabs[i].name === targetName) {
+                        this.editableTabsValue2 = targetName;
+                        return
+                    }
+                }
+
+                var newTabName = targetName;
+                this.editableTabs2.push({
+                    title: targetName,
+                    name: newTabName,
+                    content: "http://www.baidu.com"
+                });
+                this.editableTabsValue2 = newTabName;
+
+                this.initTabsContentHeight();
+            },
+            removeTab: function (targetName) {
+	            if (targetName === "1_1") {
+                    return
+	            }
+                var tabs = this.editableTabs2;
+                var activeName = this.editableTabsValue2;
+                if (activeName === targetName) {
+                    tabs.forEach(function (tab, index) {
+                        if (tab.name === targetName) {
+                            var nextTab = tabs[index + 1] || tabs[index - 1];
+                            if (nextTab) {
+                                activeName = nextTab.name;
+                            }
+                        }
+                    });
+                }
+
+                this.editableTabsValue2 = activeName;
+                this.editableTabs2 = tabs.filter(function (tab) {
+                    return tab.name !== targetName;
+                });
+            }
+        }
+    });
+
+</script>
+</body>
+</html>

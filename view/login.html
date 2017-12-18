@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>登录</title>
+
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="/static/css/element-ui.css">
+    <!-- 引入Vue -->
+    <script type="text/javascript" src="/static/js/vue.js"></script>
+    <script type="text/javascript" src="/static/js/axios.js"></script>
+    <script type="text/javascript" src="/static/js/element-ui.js"></script>
+
+    <style type="text/css">
+
+        body {
+            /*background-image: url("../img/1.jpg");*/
+            background-color: #2d3a4b;
+        }
+
+        #app {
+            overflow-y: auto;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin: auto;
+            height: 320px;
+            width: 100%;
+        }
+
+        .btn {
+            width: 100%;
+        }
+
+        h2 {
+            text-align: center;
+            color: #eee;
+        }
+
+        .el-input__inner {
+            background-color: #293243;
+            color: #eee;
+            height: 50px;
+            border: 1px solid hsla(0, 0%, 100%, .1);
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <el-container>
+        <el-main>
+            <el-row :gutter="20">
+                <el-col :span="6" :offset="9">
+                    <h2>系统登录</h2>
+                    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" class="form">
+                        <el-form-item prop="username">
+                            <el-input v-model="ruleForm.username" placeholder="请输入用户名"></el-input>
+                        </el-form-item>
+                        <el-form-item prop="password">
+                            <el-input v-model="ruleForm.password" placeholder="请输入密码"></el-input>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button type="primary" @click="submitForm('ruleForm')" class="btn">登录</el-button>
+                            <!--<el-button @click="resetForm('ruleForm')">重置</el-button>-->
+                        </el-form-item>
+                    </el-form>
+                </el-col>
+            </el-row>
+        </el-main>
+    </el-container>
+</div>
+
+<script type="text/javascript">
+
+	var vm = new Vue({
+		el: '#app',
+		data: {
+			ruleForm: {
+				username: '',
+				password: ''
+			},
+			rules: {
+				username: [
+					{required: true, message: '请输入用户名', trigger: 'blur'},
+					{min: 6, max: 8, message: '长度在 6 到 8 个字符', trigger: 'blur,change'}
+				],
+				password: [
+					{required: true, message: '请输入密码', trigger: 'blur,change'},
+					{min: 6, max: 12, message: '长度在 6 到 12 个字符', trigger: 'blur,change'}
+				]
+			}
+		},
+		methods: {
+			submitForm: function (formName) {
+				this.$refs[formName].validate(function (valid) {
+
+					if (valid) {
+                        axios.post('http://test.jutongkeji.com:8075/TaxiManager/api/passenger/queryAdvanceOrder', {passengerId:'12345'})
+							.then(function (res) {
+								console.log(res);
+							}).catch(function (err) {
+                                console.log(err);
+                            });
+					} else {
+
+					}
+
+					console.log(valid);
+				});
+			},
+			resetForm: function (formName) {
+				this.$refs[formName].resetFields();
+			}
+		}
+	});
+
+</script>
+</body>
+</html>
