@@ -1,0 +1,171 @@
+-- MySQL dump 10.13  Distrib 5.6.38, for Linux (x86_64)
+--
+-- Host: localhost    Database: blog
+-- ------------------------------------------------------
+-- Server version	5.6.38
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `SYSTEM_PRIVILEGE`
+--
+
+DROP TABLE IF EXISTS `SYSTEM_PRIVILEGE`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `SYSTEM_PRIVILEGE` (
+  `ID` int(8) NOT NULL AUTO_INCREMENT COMMENT '主键标识',
+  `CODE` varchar(32) NOT NULL COMMENT '权限标识',
+  `PCODE` varchar(32) NOT NULL COMMENT '父权限标识',
+  `NAME` varchar(64) NOT NULL COMMENT '权限名称',
+  `CREATETIME` datetime DEFAULT NULL COMMENT '创建时间',
+  `UPDATETIME` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `SYSTEM_PRIVILEGE`
+--
+
+LOCK TABLES `SYSTEM_PRIVILEGE` WRITE;
+/*!40000 ALTER TABLE `SYSTEM_PRIVILEGE` DISABLE KEYS */;
+/*!40000 ALTER TABLE `SYSTEM_PRIVILEGE` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `SYSTEM_ROLE`
+--
+
+DROP TABLE IF EXISTS `SYSTEM_ROLE`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `SYSTEM_ROLE` (
+  `ID` int(8) NOT NULL AUTO_INCREMENT COMMENT '主键标识',
+  `NAME` varchar(64) NOT NULL COMMENT '角色标识',
+  `STATUS` varchar(64) NOT NULL COMMENT '状态',
+  `CREATOR` varchar(64) DEFAULT NULL COMMENT '创建人',
+  `UPDATOR` varchar(64) DEFAULT NULL COMMENT '修改人',
+  `CREATETIME` datetime DEFAULT NULL COMMENT '创建时间',
+  `UPDATETIME` datetime DEFAULT NULL COMMENT '更新时间',
+  `DESCRIPTION` varchar(512) DEFAULT NULL COMMENT '角色描述',
+  `ISSYSTEM` tinyint(1) NOT NULL COMMENT '1,系统管理员 2,不是系统管理员',
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `SYSTEM_ROLE`
+--
+
+LOCK TABLES `SYSTEM_ROLE` WRITE;
+/*!40000 ALTER TABLE `SYSTEM_ROLE` DISABLE KEYS */;
+/*!40000 ALTER TABLE `SYSTEM_ROLE` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `SYSTEM_ROLE_PRIVILEGE`
+--
+
+DROP TABLE IF EXISTS `SYSTEM_ROLE_PRIVILEGE`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `SYSTEM_ROLE_PRIVILEGE` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键标识',
+  `ROLEID` int(8) DEFAULT NULL COMMENT '角色编号',
+  `CREATOR` varchar(64) NOT NULL COMMENT '创建人',
+  `CREATETIME` datetime NOT NULL COMMENT '创建时间',
+  `PRIVILEGECODE` varchar(32) DEFAULT NULL COMMENT '权限编号',
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=36323 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `SYSTEM_ROLE_PRIVILEGE`
+--
+
+LOCK TABLES `SYSTEM_ROLE_PRIVILEGE` WRITE;
+/*!40000 ALTER TABLE `SYSTEM_ROLE_PRIVILEGE` DISABLE KEYS */;
+/*!40000 ALTER TABLE `SYSTEM_ROLE_PRIVILEGE` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `SYSTEM_USER`
+--
+
+DROP TABLE IF EXISTS `SYSTEM_USER`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `SYSTEM_USER` (
+  `ID` int(8) NOT NULL AUTO_INCREMENT COMMENT '主键标识',
+  `LOGINNAME` varchar(64) DEFAULT NULL COMMENT '登录名称',
+  `NAME` varchar(64) DEFAULT NULL COMMENT '用户名称',
+  `ISADMIN` int(2) DEFAULT NULL COMMENT '是否管理员 1.是 2.否',
+  `PASSWORD` varchar(128) DEFAULT NULL COMMENT '密码',
+  `STATUS` int(2) DEFAULT NULL COMMENT '1.正常 2.锁定',
+  `LASTLOGINTIME` datetime DEFAULT NULL COMMENT '最后登录时间',
+  `CREATOR` varchar(64) DEFAULT NULL COMMENT '创建人',
+  `UPDATOR` varchar(64) DEFAULT NULL COMMENT '修改人',
+  `CREATETIME` datetime DEFAULT NULL COMMENT '创建时间',
+  `UPDATETIME` datetime DEFAULT NULL COMMENT '更新时间',
+  `PHONE` varchar(12) DEFAULT NULL COMMENT '手机号',
+  `SEX` int(1) DEFAULT NULL COMMENT '性别 1.男 2.女',
+  `EMAIL` varchar(32) DEFAULT NULL COMMENT '邮箱',
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `SYSTEM_USER`
+--
+
+LOCK TABLES `SYSTEM_USER` WRITE;
+/*!40000 ALTER TABLE `SYSTEM_USER` DISABLE KEYS */;
+/*!40000 ALTER TABLE `SYSTEM_USER` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `SYSTEM_USER_ROLE`
+--
+
+DROP TABLE IF EXISTS `SYSTEM_USER_ROLE`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `SYSTEM_USER_ROLE` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键标识',
+  `USERID` int(8) DEFAULT NULL COMMENT '用户编号',
+  `ROLEID` int(8) DEFAULT NULL COMMENT '角色编号',
+  `CREATOR` varchar(64) DEFAULT NULL COMMENT '创建人',
+  `CREATETIME` datetime DEFAULT NULL COMMENT '创建时间',
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `SYSTEM_USER_ROLE`
+--
+
+LOCK TABLES `SYSTEM_USER_ROLE` WRITE;
+/*!40000 ALTER TABLE `SYSTEM_USER_ROLE` DISABLE KEYS */;
+/*!40000 ALTER TABLE `SYSTEM_USER_ROLE` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2017-12-22  7:21:15

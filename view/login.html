@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -14,7 +15,6 @@
     <script type="text/javascript" src="/static/js/element-ui.js"></script>
 
     <style type="text/css">
-
         body {
             /*background-image: url("../img/1.jpg");*/
             background-color: #2d3a4b;
@@ -49,89 +49,91 @@
         }
     </style>
 </head>
+
 <body>
-<div id="app">
-    <el-container>
-        <el-main>
-            <el-row :gutter="20">
-                <el-col :span="6" :offset="9">
-                    <h2>系统登录</h2>
-                    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" class="form">
-                        <el-form-item prop="username">
-                            <el-input v-model="ruleForm.username" placeholder="请输入用户名"></el-input>
-                        </el-form-item>
-                        <el-form-item prop="password">
-                            <el-input v-model="ruleForm.password" placeholder="请输入密码"></el-input>
-                        </el-form-item>
-                        <el-form-item>
-                            <el-button type="primary" @click="submitForm('ruleForm')" class="btn">登录</el-button>
-                            <!--<el-button @click="resetForm('ruleForm')">重置</el-button>-->
-                        </el-form-item>
-                    </el-form>
-                </el-col>
-            </el-row>
-        </el-main>
-    </el-container>
-</div>
+    <div id="app">
+        <el-container>
+            <el-main>
+                <el-row :gutter="20">
+                    <el-col :span="6" :offset="9">
+                        <h2>系统登录</h2>
+                        <el-form :model="ruleForm" :rules="rules" ref="ruleForm" class="form">
+                            <el-form-item prop="username">
+                                <el-input v-model="ruleForm.username" placeholder="请输入用户名"></el-input>
+                            </el-form-item>
+                            <el-form-item prop="password">
+                                <el-input v-model="ruleForm.password" placeholder="请输入密码"></el-input>
+                            </el-form-item>
+                            <el-form-item>
+                                <el-button type="primary" @click="submitForm('ruleForm')" class="btn">登录</el-button>
+                                <!--<el-button @click="resetForm('ruleForm')">重置</el-button>-->
+                            </el-form-item>
+                        </el-form>
+                    </el-col>
+                </el-row>
+            </el-main>
+        </el-container>
+    </div>
 
-<script type="text/javascript">
+    <script type="text/javascript">
 
-    Vue.prototype.$qs = Qs;
-    Vue.prototype.$axios = axios;
+        Vue.prototype.$qs = Qs;
+        Vue.prototype.$axios = axios;
 
-    var vm = new Vue({
-        el: '#app',
-        data: {
-            ruleForm: {
-                username: '',
-                password: ''
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                ruleForm: {
+                    username: '',
+                    password: ''
+                },
+                rules: {
+                    username: [
+                        { required: true, message: '请输入用户名', trigger: 'blur' },
+                        { min: 6, max: 8, message: '长度在 6 到 8 个字符', trigger: 'blur,change' }
+                    ],
+                    password: [
+                        { required: true, message: '请输入密码', trigger: 'blur,change' },
+                        { min: 6, max: 12, message: '长度在 6 到 12 个字符', trigger: 'blur,change' }
+                    ]
+                }
             },
-            rules: {
-                username: [
-                    {required: true, message: '请输入用户名', trigger: 'blur'},
-                    {min: 6, max: 8, message: '长度在 6 到 8 个字符', trigger: 'blur,change'}
-                ],
-                password: [
-                    {required: true, message: '请输入密码', trigger: 'blur,change'},
-                    {min: 6, max: 12, message: '长度在 6 到 12 个字符', trigger: 'blur,change'}
-                ]
+            methods: {
+                submitForm: function (formName) {
+
+                    var _this = this;
+                    this.$refs[formName].validate(function (valid) {
+
+                        if (valid) {
+                            _this.$axios.post("/toLogin", _this.$qs.stringify({
+                                "username": _this.ruleForm.username,
+                                "password": _this.ruleForm.password
+                            })).then(function (res) {
+                                var result = res.data;
+                                if (result.success) {
+                                    _this.$message({
+                                        message: result.message,
+                                        type: 'success'
+                                    });
+                                } else {
+                                    _this.$message.error(result.message);
+                                }
+                                console.log(res);
+                            }).catch(function (err) {
+                                _this.$message.error("登录失败");
+                            });
+                        }
+
+                        console.log(valid);
+                    });
+                },
+                resetForm: function (formName) {
+                    this.$refs[formName].resetFields();
+                }
             }
-        },
-        methods: {
-            submitForm: function (formName) {
+        });
 
-                var _this = this;
-                this.$refs[formName].validate(function (valid) {
-
-                    if (valid) {
-                        _this.$axios.post("/toLogin", _this.$qs.stringify({
-                            "username": _this.ruleForm.username,
-                            "password": _this.ruleForm.password
-                        })).then(function (res) {
-                            var data = res.data;
-                            if (data.code === 1) {
-                                _this.$message({
-                                    message: data.result,
-                                    type: 'success'
-                                });
-                            } else {
-                                _this.$message.error(data.result);
-                            }
-                            console.log(res);
-                        }).catch(function (err) {
-                            _this.$message.error("登录失败");
-                        });
-                    }
-
-                    console.log(valid);
-                });
-            },
-            resetForm: function (formName) {
-                this.$refs[formName].resetFields();
-            }
-        }
-    });
-
-</script>
+    </script>
 </body>
+
 </html>
