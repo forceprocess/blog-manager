@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"html/template"
 	"net/http"
 	"utils"
 
@@ -26,6 +27,16 @@ type SystemUser struct {
 	Phone         string `json:"phone"`
 	Sex           int    `json:"sex"`
 	Email         string `json:"email"`
+}
+
+// Login 登录页面
+func Login(w http.ResponseWriter, r *http.Request) {
+	t, err := template.ParseFiles(Dir + "view/login.html")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	t.Execute(w, nil)
 }
 
 // TOLogin 用于登录请求

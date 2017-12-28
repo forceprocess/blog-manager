@@ -111,6 +111,7 @@
                             })).then(function (res) {
                                 var result = res.data;
                                 if (result.success) {
+                                    location.href = '/index';
                                     _this.$message({
                                         message: result.message,
                                         type: 'success'
