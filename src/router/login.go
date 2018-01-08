@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
-	"utils"
+	. "utils"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -42,7 +42,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 // TOLogin 用于登录请求
 func ToLogin(writer http.ResponseWriter, request *http.Request) {
 
-	result := utils.Result{}
+	result := Result{}
 	request.ParseForm()
 	var buf []byte
 
@@ -62,7 +62,7 @@ func ToLogin(writer http.ResponseWriter, request *http.Request) {
 		defer db.Close()
 
 		sql := "select * from system_user where loginname=? and `password`=?"
-		row, err := db.Query(sql, username, password)
+		row, err := DB.Query(sql, username, password)
 		if err != nil {
 			result.Message = "登录失败！"
 		}

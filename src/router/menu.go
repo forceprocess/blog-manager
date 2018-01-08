@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"utils"
+	. "utils"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -29,10 +29,10 @@ type Menu struct {
 // QueryMenuList 获取菜单
 func QueryMenuList(w http.ResponseWriter, r *http.Request) {
 
-	result := utils.Result{}
+	result := Result{}
 	var buf []byte
 
-	db, err := sql.Open("mysql", "root:root@tcp(127.0.0.1:3306)/blog?charset=utf8")
+	db, err := sql.Open("mysql", "root:@tcp(127.0.0.1:3306)/blog?charset=utf8")
 	if err != nil {
 		result.Message = "获取菜单超时！"
 		buf, _ = json.Marshal(result)
@@ -43,7 +43,7 @@ func QueryMenuList(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	sql := "select id,pid,name,path,icon from system_menu where status=0 and pid=?"
-	row, err := db.Query(sql, 0)
+	row, err := DB.Query(sql, 0)
 	if err != nil {
 		result.Message = "获取菜单失败！"
 	}
@@ -55,8 +55,8 @@ func QueryMenuList(w http.ResponseWriter, r *http.Request) {
 		var menu Menu
 		row.Scan(&menu.Id, &menu.Pid, &menu.Name, &menu.Path, &menu.Icon)
 
-		children, err := db.Query(sql,menu.Id)
-		if err!=nil {
+		children, err := db.Query(sql, menu.Id)
+		if err != nil {
 			fmt.Println(err)
 			return
 		}
@@ -66,7 +66,7 @@ func QueryMenuList(w http.ResponseWriter, r *http.Request) {
 		for children.Next() {
 			var me Menu
 			children.Scan(&me.Id, &me.Pid, &me.Name, &me.Path, &me.Icon)
-			childrens = append(childrens,me)
+			childrens = append(childrens, me)
 		}
 		menu.Children = childrens
 
